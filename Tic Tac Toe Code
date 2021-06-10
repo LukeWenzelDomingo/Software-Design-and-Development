@@ -1,0 +1,198 @@
+using System;
+
+using System.Threading;
+
+
+namespace TIC_TAC_TOE
+
+{
+
+    class Program
+
+    {
+
+       
+        static int contender = 1; //Setting Contender 1 as my default player  
+        //I'm making the arrangement of the numbers from 0-9 in reverse form where there is no use of zero by default  
+        static char[] arr = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
+        static int option; //This holds the choice at which position user want to mark   
+
+
+
+        // The TURN variable checks who had win the match
+        // if the score is 1 then some one had win the match
+        // if -1 then Match has a Draw
+        // if 0 then match is still running  
+
+        static int turn = 0;
+
+
+
+        static void Main(string[] args)
+
+        {
+            do
+            {
+                Console.Clear();// Whenever the loop starts again then the screen will be clear out 
+                Console.WriteLine("Ready Contenders! Place your Marks!");
+                Console.WriteLine("\n");
+                Console.WriteLine("The mark X is for the Contender 1 >_<  and The mark O is for the Contender 2 >_<:");
+                Console.WriteLine("\n");
+
+                if (contender % 2 == 0)// This is where the checking for the chances of the player happens
+                {
+                    Console.WriteLine("Ready Contender 2! It's your chance to place your mark 'O' ");
+                }
+                else
+                { 
+                    Console.WriteLine("Ready Contender 1! It's your chance to place your mark 'X' ");
+                }
+                Console.WriteLine("\n");
+                Board();// The calling of the board 
+                option = int.Parse(Console.ReadLine());//Taking the contender's choices 
+
+                // this is where the command check the position where player wants to run his/her mark
+                if (arr[option] != 'X' && arr[option] != 'O')
+
+                {
+                    if (contender % 2 == 0) 
+                    {
+                        arr[option] = 'O';
+                        contender++;
+                    }
+                    else
+                    {
+                        arr[option] = 'X';
+                        contender++;
+                    }
+                }
+                else // If there is any position where the player wants to put his/her mark but that box number is already marked then show the message and load the board again  
+                {
+                    Console.WriteLine("WHAT ARE YOU THINKING CONTENDER?? Can't you see this tile {0} has already been marked with {1}", option, arr[option]);
+                    Console.WriteLine("\n");
+                    Console.WriteLine("Now WAIT! In just 5 seconds the board will load again.....");
+                    Thread.Sleep(5000);
+                }
+                turn = CheckWin();// The calling for the check win  
+            } while (turn != 1 && turn != -1);// This loop will be run until all cell of the grid is not marked with X and O or some player is not win  
+
+            Console.Clear();// For clearing the console  
+            Board();// This function is for getting the board again  
+
+            if (turn == 1)// if the turn value is 1 then some one had win  
+            {
+                Console.WriteLine("\n");
+                Console.WriteLine("Congratulations Contender {0} YOU HAVE SUCCESSFULLY CRASHED YOUR ENEMY!", (contender % 2) + 1);
+            }
+            else// if the turn value is -1 then the match will be draw and no one is the winner  
+            {
+                Console.WriteLine("\n");
+                Console.WriteLine("Too bad Contender T_T It looks like it's Draw T_T");
+                Console.WriteLine("\n");
+                Console.WriteLine("Please Try Again ;) Nothing is impossible! FIGHTING!!");
+
+            }
+            Console.ReadLine();
+        }
+
+        // Now I'll be making the board for the game
+        private static void Board()
+
+        {
+
+            Console.WriteLine("                   |     |     |     |");
+            Console.WriteLine("                   |  {0}  |  {1}  |  {2}  |", arr[9], arr[8], arr[7]);
+            Console.WriteLine("                   |_____|_____|_____|");
+            Console.WriteLine("                   |     |     |     |");
+            Console.WriteLine("                   |  {0}  |  {1}  |  {2}  |", arr[6], arr[5], arr[4]);
+            Console.WriteLine("                   |_____|_____|_____|");
+            Console.WriteLine("                   |     |     |     |");
+            Console.WriteLine("                   |  {0}  |  {1}  |  {2}  |", arr[3], arr[2], arr[1]);
+            Console.WriteLine("                   |_____|_____|_____|");
+
+        }
+
+
+
+        //This is where the checking if either one of the contenders had win or not   
+
+        private static int CheckWin()
+
+        {
+
+            #region The Horzontal Winning Condtion
+
+            //This is the winning condition for first row   
+
+            if (arr[9] == arr[8] && arr[8] == arr[7])
+            {
+                return 1;
+            }
+            //This is the winning condition for second row   
+            else if (arr[6] == arr[5] && arr[5] == arr[4])
+            {
+                return 1;
+            }
+            //This is the winning condition for third row   
+            else if (arr[4] == arr[3] && arr[3] == arr[2])
+            {
+                return 1;
+            }
+
+            #endregion
+
+
+
+            #region The Vertical Winning Condtion
+
+            //This is the winning condition for First Column       
+
+            else if (arr[9] == arr[6] && arr[6] == arr[3])
+            {
+                return 1;
+            }
+            //This is the winning condition for Second Column  
+            else if (arr[8] == arr[5] && arr[5] == arr[2])
+            {
+                return 1;
+            }
+            //This is the winning condition for Third Column  
+            else if (arr[7] == arr[4] && arr[4] == arr[1])
+            {
+                return 1;
+            }
+
+            #endregion
+
+            #region Diagonal Winning Condition
+            else if (arr[9] == arr[5] && arr[5] == arr[1])
+            {
+                return 1;
+            }
+            else if (arr[7] == arr[5] && arr[5] == arr[3])
+            {
+                return 1;
+            }
+
+            #endregion
+
+
+
+            #region Checking For Draw
+            // If all the cells or numbers has been filled with X or O then either one of the player has won the match  
+            else if (arr[9] != '9' && arr[8] != '8' && arr[7] != '7' && arr[6] != '6' && arr[5] != '5' && arr[4] != '4' && arr[3] != '3' && arr[2] != '2' && arr[1] != '1')
+            {
+                return -1;
+            }
+
+            #endregion
+            else
+            {
+                return 0;
+            }
+
+        }
+
+    }
+
+}
